@@ -1,0 +1,209 @@
+/* src/style.css */
+
+/* Basic resets and global styles */
+:root {
+  --cell-width: 100px;
+  --cell-height: 25px;
+  --header-height: 25px;
+  --header-width: 50px;
+
+  --border-color: #e2e8f0; /* gray-300 */
+  --header-bg: #e2e8f0; /* gray-200 */
+  --header-text-color: #4a5568; /* gray-700 */
+  --cell-bg: #ffffff;
+  --active-cell-bg: #e0f2fe; /* blue-100 */
+  --active-cell-border: #3b82f6; /* blue-500 */
+  --editing-cell-bg: #fffdeb; /* yellow-50 */
+  --app-bg: #f7fafc; /* gray-100 */
+  --formula-bar-bg: #ffffff;
+  --formula-input-bg: #f9fafb; /* gray-50 */
+  --text-color: #2d3748; /* gray-800 */
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* Prevent body scrollbars */
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--app-bg);
+}
+
+/* Formula Bar Styling */
+.formula-bar-container {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background-color: var(--formula-bar-bg);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+  z-index: 30; /* Ensure it stays on top */
+}
+
+.cell-name-display {
+  font-weight: 700; /* font-bold */
+  font-size: 0.875rem; /* text-sm */
+  color: var(--header-text-color);
+  width: 64px; /* w-16 */
+  text-align: center;
+  user-select: none; /* Prevent selection */
+}
+
+.formula-input {
+  flex-grow: 1;
+  margin-left: 8px; /* ml-2 */
+  padding: 4px 8px; /* p-1 */
+  border: 1px solid var(--border-color);
+  border-radius: 4px; /* rounded */
+  outline: none; /* focus:outline-none */
+  background-color: var(--formula-input-bg);
+  font-size: 0.875rem; /* text-sm */
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
+    monospace; /* font-mono */
+  color: var(--text-color);
+}
+
+.formula-input:focus {
+  border-color: var(--active-cell-border); /* focus:border-blue-500 */
+}
+
+/* Grid Container Wrapper */
+.grid-container-wrapper {
+  position: relative;
+  flex-grow: 1;
+  overflow: hidden; /* Hide overflow to manage scrolling with JS */
+}
+
+/* Corner Header Cell (top-left) */
+.corner-header-cell {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--header-bg);
+  border: 1px solid var(--border-color);
+  z-index: 40; /* Higher than other headers */
+  border-top-left-radius: 2px; /* rounded-tl-sm */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+  user-select: none;
+}
+
+/* Sticky Column Headers */
+.column-headers-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* width will be set dynamically via style prop */
+  height: var(--header-height);
+  overflow: hidden; /* Hide content outside current view */
+  z-index: 30; /* Sticky headers always on top */
+}
+
+.column-header {
+  position: absolute;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+  background-color: var(--header-bg);
+  font-weight: 600; /* font-semibold */
+  font-size: 0.75rem; /* text-xs */
+  color: var(--header-text-color);
+  border-top-right-radius: 2px; /* rounded-tr-sm */
+  user-select: none; /* Prevent selection */
+}
+
+/* Sticky Row Headers */
+.row-headers-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--header-width);
+  /* height will be set dynamically via style prop */
+  overflow: hidden; /* Hide content outside current view */
+  z-index: 30; /* Sticky headers always on top */
+}
+
+.row-header {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+  background-color: var(--header-bg);
+  font-weight: 600; /* font-semibold */
+  font-size: 0.75rem; /* text-xs */
+  color: var(--header-text-color);
+  border-bottom-left-radius: 2px; /* rounded-bl-sm */
+  user-select: none; /* Prevent selection */
+}
+
+/* Main Scrollable Grid Area */
+.main-grid-scroll-area {
+  position: absolute;
+  inset: 0; /* top:0, right:0, bottom:0, left:0 */
+  overflow: auto; /* Enable scrolling */
+  -webkit-overflow-scrolling: touch; /* For smoother scrolling on iOS */
+}
+
+/* Virtual Grid Content Sizer */
+/* This invisible div defines the total scrollable area */
+.virtual-grid-content-sizer {
+  position: relative;
+}
+
+/* Cell Styling */
+.cell {
+  position: absolute;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 8px; /* px-2 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* text-ellipsis */
+  background-color: var(--cell-bg);
+  border-radius: 2px; /* rounded-sm */
+  font-size: 0.875rem; /* text-sm */
+  color: var(--text-color);
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.cell-active {
+  background-color: var(--active-cell-bg);
+  border-color: var(--active-cell-border);
+  box-shadow: 0 0 0 2px var(--active-cell-border); /* ring-2 */
+  z-index: 10; /* Bring active cell slightly forward */
+}
+
+.cell-editing {
+  z-index: 20; /* Bring editing cell far forward */
+  background-color: var(--editing-cell-bg);
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); /* shadow-inner */
+}
+
+.cell-input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  padding: 0; /* Remove default input padding */
+  font-size: inherit; /* Inherit font size from parent cell */
+  font-family: inherit; /* Inherit font family from parent cell */
+  color: inherit; /* Inherit text color from parent cell */
+}
