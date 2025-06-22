@@ -2,6 +2,10 @@
 
 This project is a performant, frontend-only clone of a basic Excel spreadsheet. It features a large virtualized grid, editable cells, and real-time formula-based calculations.
 
+## 🌐 Live Demo
+
+🔗 [Excel Sheet Clone (Netlify)](https://excel-sheet-clone-cozmox.netlify.app/)
+
 ## Objectives & Deliverables
 
 1.  **Sheet Rendering**: Renders a 10,000x10,000 cell grid without freezing or crashing the browser, utilizing virtualization for performance.
